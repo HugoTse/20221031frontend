@@ -360,7 +360,62 @@ function App() {
     setUpperdate('');
     fetchRecords();
   }
-  
+
+
+  // Function for deleting files
+  async function deleteFile(file){
+    console.log(file.file.id.S);
+    // Instantiate a request url
+    var url = "https://1889vnphkf.execute-api.us-west-1.amazonaws.com/v0/filedelete?deletedid="+file.file.id.S;
+    console.log(url);
+    // instantiate a headers object
+    var myHeaders = new Headers();
+    // add content type header to object
+    myHeaders.append("Content-Type", "application/json");
+    // create a JSON object with parameters for API call and store in a variable
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    // make API call with parameters and use promises to get response
+    await fetch(url, requestOptions)
+      .then((response) => response.text())
+      // .then((result) => alert(JSON.parse(result).body))
+      .catch((error) => console.log("error", error));
+    alert('Successfully deleted file')
+    // Refresh the records
+    fetchRecords();
+  }
+
+
+  // Function for deleting files
+  async function downloadedFile(file){
+    console.log(file.file.id.S);
+    // Instantiate a request url
+    var url = "https://1889vnphkf.execute-api.us-west-1.amazonaws.com/v0/filedownloaded?downloadedid="+file.file.id.S+"&username="+loggedinusername;
+    console.log(url);
+    // instantiate a headers object
+    var myHeaders = new Headers();
+    // add content type header to object
+    myHeaders.append("Content-Type", "application/json");
+    // create a JSON object with parameters for API call and store in a variable
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    // make API call with parameters and use promises to get response
+    await fetch(url, requestOptions)
+      .then((response) => response.text())
+      // .then((result) => alert(JSON.parse(result).body))
+      .catch((error) => console.log("error", error));
+    // alert('Successfully deleted file')
+    // Refresh the records
+    fetchRecords();
+  }
+
+
 
 
   return (
@@ -463,8 +518,9 @@ function App() {
         </SelectField>
         <br/>
         </div>
-     
-
+        
+        {loggedinaccounttype == 'user'? (<><br/></>):(<>/</>)}
+        
         {/* Search by filename */}
         <SearchField
           label="Search"
@@ -506,7 +562,7 @@ function App() {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>
-                <a href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+                <a onClick={() => downloadedFile({file})} href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
               </TableCell>
               <TableCell>{file.timestamp.S}</TableCell>
               <TableCell>{file.hash.S}</TableCell>
@@ -521,43 +577,146 @@ function App() {
         </>):(<></>) }
         
 
-        {/* The user filter that is displayed */}
-        { userfilter != '' ? (<>
-        <Heading level={3}>User: &nbsp; <Badge variation="error" size="large"><b>{userfilter}</b> </Badge></Heading>
-        <br/>
-        <Table highlightOnHover={true}>
-        <TableHead>
-          <TableRow>
-            <TableCell as="th" colspan="6">
-              Filtered Files - based on file author's username
-            </TableCell>
-          </TableRow>
-          </TableHead>
-          <TableBody>
-        {records.length > 0 ? (
-          records.map((file) => 
-          <>
-            {file.user.S == userfilter ? (<>
+        {/* The user filter that is displayed only for owners and administrators*/}
+        {loggedinaccounttype != 'user' ? (<>
+          { userfilter != '' ? (<>
+          <Heading level={3}>User: &nbsp; <Badge variation="error" size="large"><b>{userfilter}</b> </Badge></Heading>
+          <br/>
+          <Table highlightOnHover={true}>
+          <TableHead>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell>
-                <a href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+              <TableCell as="th" colspan="6">
+                Filtered Files - based on file author's username
               </TableCell>
-              <TableCell>{file.timestamp.S}</TableCell>
-              <TableCell>{file.hash.S}</TableCell>
-              <TableCell>{file.user.S}</TableCell>
-              <TableCell></TableCell>
             </TableRow>
-            </>) : (<></>)}
-          </>)) : (<></>) }
-          </TableBody>
-        </Table>
-        <br/>
-        </>):(<></>) }
+            </TableHead>
+            <TableBody>
+          {records.length > 0 ? (
+            records.map((file) => 
+            <>
+              {file.user.S == userfilter ? (<>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell>
+                  <a onClick={() => downloadedFile({file})} href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+                </TableCell>
+                <TableCell>{file.timestamp.S}</TableCell>
+                <TableCell>{file.hash.S}</TableCell>
+                <TableCell>{file.user.S}</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+              </>) : (<></>)}
+            </>)) : (<></>) }
+            </TableBody>
+          </Table>
+          <br/>
+          </>):(<></>) }
+        </>):(<></>)}
         
         
         {/* Show what the owner sees */}
         {loggedinaccounttype == 'owner' ? (<>
+          <ThemeProvider theme={theme} colorMode="light">
+            <Table highlightOnHover variation="striped">
+              <TableHead>
+                <TableRow>
+                  <TableCell as="th">FILE FILTER</TableCell>
+                  <TableCell as="th">FILE NAME</TableCell>
+                  <TableCell as="th">MODIFIED TIME</TableCell>
+                  <TableCell as="th">UPLOAD TIME</TableCell>
+                  <TableCell as="th">DOWNLOADED</TableCell>
+                  <TableCell as="th">USERNAME</TableCell>
+                  <TableCell as="th">
+                    <Button backgroundColor="purple" color="white" onClick={clearfilters}>CLEAR</Button>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {records.length > 0 ? (records.map((file) => 
+                <>
+                  <TableRow>
+                    <TableCell>
+                      <Button onDoubleClick={() => setFile({file})}> {file.file.S}</Button>
+                    </TableCell>
+                    <TableCell>
+                      <a onClick={() => downloadedFile({file})} href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+                    </TableCell>
+                    <TableCell>
+                      {file.lastmodified.S}
+                    </TableCell>
+                    <TableCell>
+                      {file.timestamp.S}
+                    </TableCell>
+                    <TableCell as="th">
+                      {file.downloaded.S.includes(loggedinusername) ? (<><Icon size="Large" ariaLabel="Flag" pathData="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></>) : (<></>)}
+                    </TableCell>
+                    <TableCell>
+                      <Button onDoubleClick={() => setUser({file})}> {file.user.S}</Button>
+                    </TableCell>
+                    <TableCell>
+                    </TableCell>
+                  </TableRow>
+                </>)) : (<></>)}
+              </TableBody>
+            </Table>
+          </ThemeProvider>
+        </>) : (<></>)}
+
+
+        {loggedinaccounttype == 'administrator' ? (<>
+          <ThemeProvider theme={theme} colorMode="light">
+            <Table highlightOnHover variation="striped">
+              <TableHead>
+                <TableRow>
+                  <TableCell as="th">FILE FILTER</TableCell>
+                  <TableCell as="th">FILE NAME</TableCell>
+                  <TableCell as="th">MODIFIED TIME</TableCell>
+                  <TableCell as="th">UPLOAD TIME</TableCell>
+                  <TableCell as="th">FILE HASH</TableCell>
+                  <TableCell as="th">DOWNLOADED</TableCell>
+                  <TableCell as="th">USERNAME</TableCell>
+                  <TableCell>
+                    <Button backgroundColor="purple" color="white" onClick={clearfilters}>CLEAR</Button>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {records.length > 0 ? (records.map((file) => 
+                <>
+                  <TableRow>
+                    <TableCell>
+                      <Button onDoubleClick={() => setFile({file})}> {file.file.S}</Button>
+                    </TableCell>
+                    <TableCell>
+                      <a onClick={() => downloadedFile({file})} href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+                    </TableCell>
+                    <TableCell>
+                      {file.lastmodified.S}
+                    </TableCell>
+                    <TableCell>
+                      {file.timestamp.S}
+                    </TableCell>
+                    <TableCell>
+                      {file.hash.S}
+                    </TableCell>
+                    <TableCell as="th">
+                      {file.downloaded.S.includes(loggedinusername) ? (<><Icon size="Large" ariaLabel="Flag" pathData="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></>) : (<></>)}
+                    </TableCell>
+                    <TableCell>
+                      <Button onDoubleClick={() => setUser({file})}> {file.user.S}</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button onDoubleClick={() => deleteFile({file})}> Delete</Button>
+                    </TableCell>
+                  </TableRow>
+                </>)) : (<></>)}
+              </TableBody>
+            </Table>
+          </ThemeProvider>
+        </>) : (<></>)}
+
+
+        {loggedinaccounttype == 'user' ? (<>
           <ThemeProvider theme={theme} colorMode="light">
             <Table highlightOnHover variation="striped">
               <TableHead>
@@ -580,7 +739,7 @@ function App() {
                       <Button onDoubleClick={() => setFile({file})}> {file.file.S}</Button>
                     </TableCell>
                     <TableCell>
-                      <a href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+                      <a onClick={() => downloadedFile({file})} href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
                     </TableCell>
                     <TableCell>
                       {file.lastmodified.S}
@@ -592,7 +751,6 @@ function App() {
                       {file.downloaded.S.includes(loggedinusername) ? (<><Icon size="Large" ariaLabel="Flag" pathData="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></>) : (<></>)}
                     </TableCell>
                     <TableCell>
-                      <Button onDoubleClick={() => setUser({file})}> {file.user.S}</Button>
                     </TableCell>
                   </TableRow>
                 </>)) : (<></>)}
@@ -601,14 +759,6 @@ function App() {
           </ThemeProvider>
         </>) : (<></>)}
 
-
-        {loggedinaccounttype == 'administrator' ? (<>
-          <p>Administrator</p>
-        </>) : (<></>)}
-        {loggedinaccounttype == 'user' ? (<>
-          <p>User</p>
-
-        </>) : (<></>)}
 
         {/* Show filtered table & table body */}
         {records.length > 0 ? (records.map((file) => 
