@@ -518,10 +518,11 @@ function App() {
                     <TableCell>
                       {file.timestamp.S}
                     </TableCell>
-                    <TableCell>
+                    <TableCell as="th">
                       {file.downloaded.S.includes(loggedinusername) ? (<><Icon size="Large" ariaLabel="Flag" pathData="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></>) : (<></>)}
                     </TableCell>
-                    <TableCell as="th">
+                    <TableCell>
+                      <Button onDoubleClick={() => setUser({file})}> {file.user.S}</Button>
                     </TableCell>
                   </TableRow>
                 </>)) : (<></>)}
