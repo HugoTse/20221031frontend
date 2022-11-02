@@ -124,7 +124,7 @@ function App() {
         console.log('loggedinorganizationid = ' + loggedinorganizationid);
         console.log('loggedinaccounttype = ' + loggedinaccounttype);
         // Immediately fetch records before losing the variables
-        // fetchRecords();
+        fetchRecords();
       }
       console.log('Now logged in');
     }
@@ -233,12 +233,90 @@ function App() {
   }
 
 
+  // Fetch the records in the table
+  async function fetchRecords(){
+    const myHeaders = {
+      "Content-Type": "application/json",
+    }
+    // create a JSON object with parameters for API call and store in a variable
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    // Instantiate a request url
+    var url = "https://1889vnphkf.execute-api.us-west-1.amazonaws.com/v0/fileread?username="+loggedinusername+"&password="+loggedinpassword+"&upperdate="+upperdate+"&lowerdate="+lowerdate;
+    console.log(url);
+    const apiResponse = await fetch(url, requestOptions)
+    // const apiResponse = await fetch('http://api.open-notify.org/astros.json', {headers} )
+    const apiResponseJSON = await apiResponse.json()
+    console.log(apiResponseJSON);
+    // const rs = apiResponseJSON.body
+    // console.log(rs)
+    // setRecords([...rs])
+    setRecords([...apiResponseJSON])
+  }
+  // fetchRecords();
+  // Fetch the records in the table: UseEffect
+  useEffect(() => { 
+    async function fetchRecords(){
+      const myHeaders = {
+        "Content-Type": "application/json",
+      }
+      // create a JSON object with parameters for API call and store in a variable
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+      // Instantiate a request url
+      var url = "https://1889vnphkf.execute-api.us-west-1.amazonaws.com/v0/fileread?username="+loggedinusername+"&password="+loggedinpassword+"&upperdate="+upperdate+"&lowerdate="+lowerdate;
+      console.log(url);
+      const apiResponse = await fetch(url, requestOptions)
+      // const apiResponse = await fetch('http://api.open-notify.org/astros.json', {headers} )
+      const apiResponseJSON = await apiResponse.json()
+      console.log(apiResponseJSON);
+      // const rs = apiResponseJSON.body
+      // console.log("This is rs: " + rs)
+      // setRecords([...rs])
+      setRecords([...apiResponseJSON])
+    }
+    fetchRecords()
+  }, []);
+
+
+  // Set the user filter
+  async function setUser(file){
+    console.log(file.file.user.S);
+    setUserfilter(file.file.user.S);
+    setFilefilter('');
+  }
+  // Search user filter
+  async function searchUser(u){
+    console.log(u);
+    setUserfilter(u);
+    setFilefilter('');
+  }
+  // Set the file filter
+  async function setFile(file){
+    console.log(file.file.file.S);
+    setFilefilter(file.file.file.S);
+    setUserfilter('');
+  }
+  // Set the file filter
+  async function searchFile(f){
+    console.log(f);
+    setFilefilter(f);
+    setUserfilter('');
+  }
+
+
   return (
     <div className="App">
 
       {/* Click the ransomware defender title to fetch records again */}
-      {/* <Heading level={1} onClick={e =>fetchRecords(e)} >Ransomware Defender</Heading> */}
-      <Heading level={1} >Ransomware Defender</Heading>
+      <Heading level={1} onClick={e =>fetchRecords(e)} >Ransomware Defender</Heading>
+      {/* <Heading level={1} >Ransomware Defender</Heading> */}
       <h4><i>"Using processes, people, and technology to keep your files safe"</i></h4>
 
       {/* If not logged in, show this */}
@@ -313,6 +391,29 @@ function App() {
         </Card>
         <br/>
         <br/>
+
+        {/* Search by filename */}
+        <SearchField
+          label="Search"
+          placeholder="Search by file name..."
+          onChange={e => searchFile(e.target.value)}
+          // onClick=
+        />
+        <br/>
+
+        {/* Search by user - only for owners and admnistrators */}
+        {loggedinaccounttype != 'user' ? (<>
+          <SearchField
+            label="Search"
+            placeholder="Search by user name..."
+            onChange={e => searchUser(e.target.value)}
+          />
+        <br/>
+        </>) : (<></>)}
+
+
+
+
       </>)}
       
     </div>
