@@ -31,7 +31,9 @@ import {
   Divider,
   ToggleButton,
   TabItem,
-  Tabs
+  Tabs,
+  Radio,
+  RadioGroupField
 } from "@aws-amplify/ui-react";
 
 import React, {
@@ -39,6 +41,34 @@ import React, {
   useEffect,
 } from "react";
 
+// Table theme
+const theme: Theme = {
+  name: 'table-theme',
+  tokens: {
+    components: {
+      table: {
+        row: {
+          hover: {
+            backgroundColor: { value: '{colors.blue.20}' },
+          },
+
+          striped: {
+            backgroundColor: { value: '{colors.blue.10}' },
+          },
+        },
+
+        header: {
+          color: { value: '{colors.blue.80}' },
+          fontSize: { value: '{fontSizes.xl}' },
+        },
+
+        data: {
+          fontWeight: { value: '{fontWeights.semibold}' },
+        },
+      },
+    },
+  },
+};
 
 
 function App() {
@@ -83,6 +113,8 @@ function App() {
     // Resetting filters
     setUserfilter('');
     setFilefilter('');
+    setLowerdate('');
+    setUpperdate('');
     console.log('Now logged out');
   }
 
@@ -309,6 +341,24 @@ function App() {
     setFilefilter(f);
     setUserfilter('');
   }
+  // Set the lowerdate
+  const handleLowerchange = (e) => {
+    console.log(e.target.value)
+    setLowerdate(e.target.value);
+  };
+  // Set the upperdate
+  const handleUpperchange = (e) => {
+    console.log(e.target.value)
+    setUpperdate(e.target.value);
+  };
+  // Clear filters
+  async function clearfilters(){
+    setUserfilter('');
+    setFilefilter('');
+    setLowerdate('');
+    setUpperdate('');
+  }
+  
 
 
   return (
@@ -392,6 +442,27 @@ function App() {
         <br/>
         <br/>
 
+
+        {/* Date filters */}
+        <div className='datediv'>
+        <SelectField label="Latest files" name="" onChange={handleUpperchange}>
+          {records.length > 0 ? (records.map((file) => 
+          <>
+            <option value={file.lastmodified.S}>{file.lastmodified.S}</option>
+          </>)) : (<></>)}
+        </SelectField>
+        </div>
+        <div className='datediv'>
+        <SelectField label="Earliest files" name="" onChange={handleLowerchange}>
+          {records.length > 0 ? (records.map((file) => 
+          <>
+            <option value={file.lastmodified.S}>{file.lastmodified.S}</option>
+          </>)) : (<></>)}
+        </SelectField>
+        <br/>
+        </div>
+     
+
         {/* Search by filename */}
         <SearchField
           label="Search"
@@ -400,6 +471,7 @@ function App() {
           // onClick=
         />
         <br/>
+
 
         {/* Search by user - only for owners and admnistrators */}
         {loggedinaccounttype != 'user' ? (<>
@@ -410,8 +482,73 @@ function App() {
           />
         <br/>
         </>) : (<></>)}
+        
+        
+        
+        {/* Show what the owner sees */}
+        {loggedinaccounttype == 'owner' ? (<>
+          <ThemeProvider theme={theme} colorMode="light">
+            <Table highlightOnHover variation="striped">
+              <TableHead>
+                <TableRow>
+                  <TableCell as="th">FILE FILTER</TableCell>
+                  <TableCell as="th">FILE NAME</TableCell>
+                  <TableCell as="th">MODIFIED TIME</TableCell>
+                  <TableCell as="th">UPLOAD TIME</TableCell>
+                  <TableCell as="th">DOWNLOADED</TableCell>
+                  <TableCell as="th">
+                    <Button backgroundColor="purple" color="white" onClick={clearfilters}>CLEAR</Button>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {records.length > 0 ? (records.map((file) => 
+                <>
+                  <TableRow>
+                    <TableCell>
+                      <Button onDoubleClick={() => setFile({file})}> {file.file.S}</Button>
+                    </TableCell>
+                    <TableCell>
+                      <a href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+                    </TableCell>
+                    <TableCell>
+                      {file.lastmodified.S}
+                    </TableCell>
+                    <TableCell>
+                      {file.timestamp.S}
+                    </TableCell>
+                    <TableCell>
+                      {file.downloaded.S.includes('postmanowner') ? (<>yes</>) : (<> <Image src='/checkmark.png'></Image> </>)}
+                    </TableCell>
+                    <TableCell as="th">
+                    </TableCell>
+                  </TableRow>
+                </>)) : (<></>)}
+
+                
+              </TableBody>
+            </Table>
+          </ThemeProvider>
+        </>) : (<></>)}
 
 
+        {loggedinaccounttype == 'administrator' ? (<>
+          <p>Administrator</p>
+        </>) : (<></>)}
+        {loggedinaccounttype == 'user' ? (<>
+          <p>User</p>
+
+        </>) : (<></>)}
+
+        {/* Show filtered table & table body */}
+        {records.length > 0 ? (records.map((file) => 
+          <>
+            {/* If owner */}
+
+            {/* If administrator */}
+
+            {/* If user */}
+          </>)) : (<></>)}
 
 
       </>)}

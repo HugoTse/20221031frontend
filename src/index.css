@@ -59,3 +59,9 @@ code {
   margin-bottom: 3%;
   text-align: left;
 }
+
+.datediv{
+  max-width: 50%;
+  float: right;
+  margin-left: 3%;
+}
