@@ -33,7 +33,8 @@ import {
   TabItem,
   Tabs,
   Radio,
-  RadioGroupField
+  RadioGroupField,
+  Icon
 } from "@aws-amplify/ui-react";
 
 import React, {
@@ -518,14 +519,12 @@ function App() {
                       {file.timestamp.S}
                     </TableCell>
                     <TableCell>
-                      {file.downloaded.S.includes('postmanowner') ? (<>yes</>) : (<> <Image src='/checkmark.png'></Image> </>)}
+                      {file.downloaded.S.includes(loggedinusername) ? (<><Icon size="Large" ariaLabel="Flag" pathData="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></>) : (<></>)}
                     </TableCell>
                     <TableCell as="th">
                     </TableCell>
                   </TableRow>
                 </>)) : (<></>)}
-
-                
               </TableBody>
             </Table>
           </ThemeProvider>
@@ -553,6 +552,8 @@ function App() {
 
       </>)}
       
+      <br/>
+      <br/>
     </div>
   );
 }
