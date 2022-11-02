@@ -14,6 +14,8 @@ code {
 
 .App {
   text-align: center;
+  margin-left: 3%;
+  margin-right: 3%;
 }
 
 .App-logo {
@@ -49,4 +51,11 @@ code {
   to {
     transform: rotate(360deg);
   }
+}
+
+.login {
+  margin-left: 10%;
+  max-width: 35%;
+  margin-bottom: 3%;
+  text-align: left;
 }
