@@ -502,7 +502,7 @@ function App() {
 
         {/* Date filters */}
         <div className='datediv'>
-        <SelectField label="Files before:" name="" onChange={handleUpperchange}>
+        <SelectField label="Files before..." name="" onChange={handleUpperchange}>
           {records.length > 0 ? (records.map((file) => 
           <>
             <option value={file.lastmodified.S}>{file.lastmodified.S}</option>
@@ -510,7 +510,7 @@ function App() {
         </SelectField>
         </div>
         <div className='datediv'>
-        <SelectField label="Files after:" name="" onChange={handleLowerchange}>
+        <SelectField label="Files after..." name="" onChange={handleLowerchange}>
           {records.length > 0 ? (records.map((file) => 
           <>
             <option value={file.lastmodified.S}>{file.lastmodified.S}</option>
@@ -519,8 +519,8 @@ function App() {
         <br/>
         </div>
         
-        {loggedinaccounttype == 'user'? (<><br/></>):(<>/</>)}
-        
+        {loggedinaccounttype == 'user'? (<><br/></>):(<></>)}
+
         {/* Search by filename */}
         <SearchField
           label="Search"
