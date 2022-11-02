@@ -358,6 +358,7 @@ function App() {
     setFilefilter('');
     setLowerdate('');
     setUpperdate('');
+    fetchRecords();
   }
   
 
@@ -446,7 +447,7 @@ function App() {
 
         {/* Date filters */}
         <div className='datediv'>
-        <SelectField label="Latest files" name="" onChange={handleUpperchange}>
+        <SelectField label="Files before:" name="" onChange={handleUpperchange}>
           {records.length > 0 ? (records.map((file) => 
           <>
             <option value={file.lastmodified.S}>{file.lastmodified.S}</option>
@@ -454,7 +455,7 @@ function App() {
         </SelectField>
         </div>
         <div className='datediv'>
-        <SelectField label="Earliest files" name="" onChange={handleLowerchange}>
+        <SelectField label="Files after:" name="" onChange={handleLowerchange}>
           {records.length > 0 ? (records.map((file) => 
           <>
             <option value={file.lastmodified.S}>{file.lastmodified.S}</option>
@@ -484,6 +485,75 @@ function App() {
         <br/>
         </>) : (<></>)}
         
+
+        {/* The file filter that is displayed */}
+        { filefilter != '' ? (<>
+        <Heading level={3}>File: &nbsp; <Badge variation="error" size="large"><b>{filefilter}</b> </Badge></Heading>
+        <br/>
+        <Table highlightOnHover={true}>
+        <TableHead>
+          <TableRow>
+            <TableCell as="th" colspan="6">
+              Filtered Files - based on words in the filename
+            </TableCell>
+          </TableRow>
+          </TableHead>
+          <TableBody>
+        {records.length > 0 ? (
+          records.map((file) => 
+          <>
+            {file.file.S.includes(filefilter) ? (<>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>
+                <a href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+              </TableCell>
+              <TableCell>{file.timestamp.S}</TableCell>
+              <TableCell>{file.hash.S}</TableCell>
+              <TableCell>{file.user.S}</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+            </>) : (<></>)}
+          </>)) : (<></>) }
+          </TableBody>
+        </Table>
+        <br/>
+        </>):(<></>) }
+        
+
+        {/* The user filter that is displayed */}
+        { userfilter != '' ? (<>
+        <Heading level={3}>User: &nbsp; <Badge variation="error" size="large"><b>{userfilter}</b> </Badge></Heading>
+        <br/>
+        <Table highlightOnHover={true}>
+        <TableHead>
+          <TableRow>
+            <TableCell as="th" colspan="6">
+              Filtered Files - based on file author's username
+            </TableCell>
+          </TableRow>
+          </TableHead>
+          <TableBody>
+        {records.length > 0 ? (
+          records.map((file) => 
+          <>
+            {file.user.S == userfilter ? (<>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>
+                <a href={'https://20221024bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
+              </TableCell>
+              <TableCell>{file.timestamp.S}</TableCell>
+              <TableCell>{file.hash.S}</TableCell>
+              <TableCell>{file.user.S}</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+            </>) : (<></>)}
+          </>)) : (<></>) }
+          </TableBody>
+        </Table>
+        <br/>
+        </>):(<></>) }
         
         
         {/* Show what the owner sees */}
