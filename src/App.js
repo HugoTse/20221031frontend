@@ -494,7 +494,7 @@ function App() {
           &nbsp; &nbsp;
           <Badge variation="warning" size="large"> Account Type: &nbsp; <b>{loggedinaccounttype}</b> </Badge>
           &nbsp; &nbsp;
-          <Badge variation="success" size="large"> Organization ID: &nbsp; <b>{loggedinorganizationid}</b> </Badge>
+          {loggedinaccounttype == 'administrator' ? (<><Badge variation="success" size="large"> Organization ID: &nbsp; <b>{loggedinorganizationid}</b> </Badge></>):(<></>)}
         </Card>
         <br/>
         <br/>
@@ -550,7 +550,7 @@ function App() {
         <TableHead>
           <TableRow>
             <TableCell as="th" colspan="6">
-              Filtered Files - based on words in the filename
+              Uploaded Versions - All versions of this uploaded file
             </TableCell>
           </TableRow>
           </TableHead>
@@ -620,7 +620,7 @@ function App() {
             <Table highlightOnHover variation="striped">
               <TableHead>
                 <TableRow>
-                  <TableCell as="th">FILE FILTER</TableCell>
+                  <TableCell as="th">UPLOADED VERSIONS</TableCell>
                   <TableCell as="th">FILE NAME</TableCell>
                   <TableCell as="th">MODIFIED TIME</TableCell>
                   <TableCell as="th">UPLOAD TIME</TableCell>
@@ -668,7 +668,7 @@ function App() {
             <Table highlightOnHover variation="striped">
               <TableHead>
                 <TableRow>
-                  <TableCell as="th">FILE FILTER</TableCell>
+                  <TableCell as="th">UPLOADED VERSIONS</TableCell>
                   <TableCell as="th">FILE NAME</TableCell>
                   <TableCell as="th">MODIFIED TIME</TableCell>
                   <TableCell as="th">UPLOAD TIME</TableCell>
@@ -721,7 +721,7 @@ function App() {
             <Table highlightOnHover variation="striped">
               <TableHead>
                 <TableRow>
-                  <TableCell as="th">FILE FILTER</TableCell>
+                  <TableCell as="th">UPLOADED VERSIONS</TableCell>
                   <TableCell as="th">FILE NAME</TableCell>
                   <TableCell as="th">MODIFIED TIME</TableCell>
                   <TableCell as="th">UPLOAD TIME</TableCell>
