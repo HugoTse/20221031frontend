@@ -14,8 +14,9 @@ code {
 
 .App {
   text-align: center;
-  margin-left: 3%;
-  margin-right: 3%;
+  /* margin-left: 3%; */
+  /* margin-right: 3%; */
+  /* background-color: red; */
 }
 
 .App-logo {
@@ -64,4 +65,17 @@ code {
   max-width: 50%;
   float: right;
   margin-left: 3%;
+}
+
+.nav{
+  background-color: white;
+  text-align: right;
+  padding-right: 2%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.contentDiv{
+  margin-left: 3%;
+  margin-right: 3%;
 }

@@ -420,7 +420,14 @@ function App() {
 
   return (
     <div className="App">
-
+      <nav className='nav'>
+        <span>
+          {logged == ''? (<><Button variation='primary' onClick={logout} isDisabled={true}>SIGNED OUT</Button></>):(<><Button variation='primary' onClick={logout}>LOG OUT</Button></>)}
+        </span>
+        
+      </nav>
+      
+      <div className="contentDiv">
       {/* Click the ransomware defender title to fetch records again */}
       <Heading level={1} onClick={e =>fetchRecords(e)} >Ransomware Defender</Heading>
       {/* <Heading level={1} >Ransomware Defender</Heading> */}
@@ -485,11 +492,6 @@ function App() {
       // If logged in, show this
       (<>
         <Card>
-          <Button variation='primary'
-          onClick={logout}
-          >LOG OUT</Button>
-        </Card>
-        <Card>
           <Badge variation="info" size="large"> Username: &nbsp; <b>{loggedinusername}</b> </Badge>
           &nbsp; &nbsp;
           <Badge variation="warning" size="large"> Account Type: &nbsp; <b>{loggedinaccounttype}</b> </Badge>
@@ -497,8 +499,10 @@ function App() {
           {loggedinaccounttype == 'administrator' ? (<><Badge variation="success" size="large"> Organization ID: &nbsp; <b>{loggedinorganizationid}</b> </Badge></>):(<></>)}
         </Card>
         <br/>
-        <br/>
 
+        <Button backgroundColor="purple" color="white" isFullWidth={true} onClick={clearfilters}>CLEAR ALL FILTERS</Button>
+        <br/>
+        <br/>
 
         {/* Date filters */}
         <div className='datediv'>
@@ -518,7 +522,7 @@ function App() {
         </SelectField>
         <br/>
         </div>
-        
+      
         {loggedinaccounttype == 'user'? (<><br/></>):(<></>)}
 
         {/* Search by filename */}
@@ -540,7 +544,6 @@ function App() {
           />
         <br/>
         </>) : (<></>)}
-        
 
         {/* The file filter that is displayed */}
         { filefilter != '' ? (<>
@@ -626,9 +629,6 @@ function App() {
                   <TableCell as="th">UPLOAD TIME</TableCell>
                   <TableCell as="th">DOWNLOADED</TableCell>
                   <TableCell as="th">USERNAME</TableCell>
-                  <TableCell as="th">
-                    <Button backgroundColor="purple" color="white" onClick={clearfilters}>CLEAR</Button>
-                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -653,8 +653,6 @@ function App() {
                     <TableCell>
                       <Button onDoubleClick={() => setUser({file})}> {file.user.S}</Button>
                     </TableCell>
-                    <TableCell>
-                    </TableCell>
                   </TableRow>
                 </>)) : (<></>)}
               </TableBody>
@@ -675,9 +673,7 @@ function App() {
                   <TableCell as="th">FILE HASH</TableCell>
                   <TableCell as="th">DOWNLOADED</TableCell>
                   <TableCell as="th">USERNAME</TableCell>
-                  <TableCell>
-                    <Button backgroundColor="purple" color="white" onClick={clearfilters}>CLEAR</Button>
-                  </TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -726,9 +722,6 @@ function App() {
                   <TableCell as="th">MODIFIED TIME</TableCell>
                   <TableCell as="th">UPLOAD TIME</TableCell>
                   <TableCell as="th">DOWNLOADED</TableCell>
-                  <TableCell as="th">
-                    <Button backgroundColor="purple" color="white" onClick={clearfilters}>CLEAR</Button>
-                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -750,8 +743,6 @@ function App() {
                     <TableCell as="th">
                       {file.downloaded.S.includes(loggedinusername) ? (<><Icon size="Large" ariaLabel="Flag" pathData="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></>) : (<></>)}
                     </TableCell>
-                    <TableCell>
-                    </TableCell>
                   </TableRow>
                 </>)) : (<></>)}
               </TableBody>
@@ -760,21 +751,12 @@ function App() {
         </>) : (<></>)}
 
 
-        {/* Show filtered table & table body */}
-        {records.length > 0 ? (records.map((file) => 
-          <>
-            {/* If owner */}
-
-            {/* If administrator */}
-
-            {/* If user */}
-          </>)) : (<></>)}
-
-
       </>)}
       
       <br/>
       <br/>
+
+      </div>
     </div>
   );
 }
