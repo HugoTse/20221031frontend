@@ -420,16 +420,26 @@ function App() {
 
   return (
     <div className="App">
-      <nav className='nav'>
-        <span>
-          {logged == ''? (<><Button variation='primary' onClick={logout} isDisabled={true}>SIGNED OUT</Button></>):(<><Button variation='primary' onClick={logout}>LOG OUT</Button></>)}
-        </span>
+      {/* Click the navbar to fetch records again */}
+      <nav className='nav' onClick={e =>fetchRecords(e)}>
+        <link rel="icon" href="asu.png" />
+        <Image
+          src="/asu.png"
+          // width="4%"
+          width='40px'
+          // variation="outlined"
+        />
         
+        <span className='span'>  
+          <b>Ransomware Defender</b>
+        </span>
+        <span>
+          {logged == ''? (<><Button variation='link'> <a href='https://main.dm7srb7o45o0m.amplifyapp.com/' target="_blank">VIEW INSTRUCTIONS</a></Button>&nbsp;&nbsp; <Button variation='primary' onClick={logout} isDisabled={true}>SIGNED OUT</Button></>):
+          (<><Button variation='link'> <a href='https://main.dm7srb7o45o0m.amplifyapp.com/' target="_blank">VIEW INSTRUCTIONS</a></Button>&nbsp;&nbsp; <Button variation='primary' onClick={logout}>LOG OUT</Button></>)}
+        </span>
       </nav>
       
       <div className="contentDiv">
-      {/* Click the ransomware defender title to fetch records again */}
-      <Heading level={1} onClick={e =>fetchRecords(e)} >Ransomware Defender</Heading>
       {/* <Heading level={1} >Ransomware Defender</Heading> */}
       <h4><i>"Using processes, people, and technology to keep your files safe"</i></h4>
 
