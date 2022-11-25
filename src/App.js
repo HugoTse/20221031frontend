@@ -419,7 +419,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="App" onClick={e =>fetchRecords(e)}>
       {/* Click the navbar to fetch records again */}
       <nav className='nav' onClick={e =>fetchRecords(e)}>
         <link rel="icon" href="asu.png" />
@@ -578,7 +578,7 @@ function App() {
                 <a onClick={() => downloadedFile({file})} href={'https://20221031bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
               </TableCell>
               <TableCell>{file.timestamp.S}</TableCell>
-              <TableCell>{file.hash.S}</TableCell>
+              {loggedinaccounttype == 'administrator'? (<><TableCell>{file.hash.S}</TableCell></>):(<></>)}
               <TableCell>{file.user.S}</TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -614,7 +614,7 @@ function App() {
                   <a onClick={() => downloadedFile({file})} href={'https://20221031bucket.s3.us-west-1.amazonaws.com/'+file.s3Filename.S}>{file.file.S}</a>
                 </TableCell>
                 <TableCell>{file.timestamp.S}</TableCell>
-                <TableCell>{file.hash.S}</TableCell>
+                {loggedinaccounttype == 'administrator'? (<><TableCell>{file.hash.S}</TableCell></>):(<></>)}
                 <TableCell>{file.user.S}</TableCell>
                 <TableCell></TableCell>
               </TableRow>
