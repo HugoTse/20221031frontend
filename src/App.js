@@ -419,7 +419,7 @@ function App() {
 
 
   return (
-    <div className="App" onClick={e =>fetchRecords(e)}>
+    <div className="App">
       {/* Click the navbar to fetch records again */}
       <nav className='nav' onClick={e =>fetchRecords(e)}>
         <link rel="icon" href="asu.png" />
