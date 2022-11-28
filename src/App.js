@@ -166,7 +166,7 @@ function App() {
 
   // Function for creating an owner account
   async function createOwneraccount(e){
-    if(username != '' && password != ''){
+    if(username != '' && password != '' && organizationid != ''){
       console.log('The username is ' + username);
       console.log('The password is ' + password);
       console.log('The organization ID is ' + organizationid);
@@ -200,7 +200,7 @@ function App() {
 
   // Function for creating an administrator account
   async function createAdministratoraccount(e){
-    if(username != '' && password != '' && organizationid != ''){
+    if(username != '' && password != ''){
       console.log('The username is ' + username);
       console.log('The password is ' + password);
       console.log('The organization ID is ' + organizationid);
